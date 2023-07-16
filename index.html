@@ -45,6 +45,8 @@
 
   <!-- JavaScript code for map and restaurant search functionality. -->
   <script>
+    let map;
+
     // initialize the map and search for restaurants.
     function initMap() {
       // check if geolocation is supported by the browser.
@@ -58,7 +60,7 @@
           };
 
           // Create a new map centered at the user's location
-          const map = new google.maps.Map(document.getElementById("map"), {
+          map = new google.maps.Map(document.getElementById("map"), {
             center: userLocation,
             zoom: 12
           });
