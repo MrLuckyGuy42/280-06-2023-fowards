@@ -77,6 +77,39 @@
             searchBox.setBounds(map.getBounds());
           });
 
+          // Listen for the event when the user selects a prediction from the search box
+          searchBox.addListener("places_changed", function() {
+            const places = searchBox.getPlaces();
+
+            if (places.length === 0) {
+              return;
+            }
+
+            // Clear previous markers
+            clearMarkers();
+
+            // For each place, create a marker and set the map's center to the first result
+            const bounds = new google.maps.LatLngBounds();
+            places.forEach(function(place) {
+              if (!place.geometry) {
+                console.log("Returned place contains no geometry");
+                return;
+              }
+
+              // Create a marker for the place
+              createMarker(place, map);
+
+              if (place.geometry.viewport) {
+                bounds.union(place.geometry.viewport);
+              } else {
+                bounds.extend(place.geometry.location);
+              }
+            });
+
+            // Set the map's center and zoom to fit all markers and selected place
+            map.fitBounds(bounds);
+          });
+
           // Search for nearby restaurants on the map
           searchRestaurants(map);
         });
@@ -107,13 +140,18 @@
         });
       }
 
-      // Create a marker for each restaurant
+      // Create a marker for each place
       function createMarker(place, map) {
         new google.maps.Marker({
           position: place.geometry.location,
           map,
           title: place.name,
         });
+      }
+
+      // Clear all markers from the map
+      function clearMarkers() {
+        // ...
       }
 
       // Find user's location when the button is clicked
