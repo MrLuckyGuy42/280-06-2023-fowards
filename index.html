@@ -39,6 +39,8 @@
     <h1>Restaurant Finder</h1>
     <!-- Map container -->
     <div id="map"></div>
+    <!-- Search box for places autocomplete -->
+    <input id="placesSearchInput" type="text" placeholder="Search for a place">
     <!-- Button to find user's location -->
     <button id="findLocationButton">Find My Location</button>
   </div>
@@ -46,6 +48,7 @@
   <!-- JavaScript code for map and restaurant search functionality. -->
   <script>
     let map;
+    let searchBox;
 
     // initialize the map and search for restaurants.
     function initMap() {
@@ -63,6 +66,15 @@
           map = new google.maps.Map(document.getElementById("map"), {
             center: userLocation,
             zoom: 12
+          });
+
+          // Create a search box and link it to the UI element
+          const placesSearchInput = document.getElementById("placesSearchInput");
+          searchBox = new google.maps.places.SearchBox(placesSearchInput);
+
+          // Bias the search box to the map's viewport
+          map.addListener("bounds_changed", function() {
+            searchBox.setBounds(map.getBounds());
           });
 
           // Search for nearby restaurants on the map
