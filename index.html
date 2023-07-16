@@ -49,6 +49,7 @@
   <script>
     let map;
     let searchBox;
+    let markers = [];
 
     // initialize the map and search for restaurants.
     function initMap() {
@@ -108,29 +109,56 @@
 
             // Set the map's center and zoom to fit all markers and selected place
             map.fitBounds(bounds);
+
+            // Search for nearby restaurants at the selected location
+            searchRestaurants(bounds.getCenter());
+          });
+
+          // Find user's location and search for nearby restaurants when the button is clicked
+          const findLocationButton = document.getElementById("findLocationButton");
+          findLocationButton.addEventListener("click", function() {
+            getUserLocation();
           });
 
           // Search for nearby restaurants on the map
-          searchRestaurants(map);
+          searchRestaurants(userLocation);
         });
       } else {
         alert("Geolocation is not supported by this browser.");
       }
 
+      // Get user's location
+      function getUserLocation() {
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(function(position) {
+            const userLocation = {
+              lat: position.coords.latitude,
+              lng: position.coords.longitude
+            };
+
+            map.setCenter(userLocation);
+            clearMarkers();
+            searchRestaurants(userLocation);
+          });
+        } else {
+          alert("Geolocation is not supported by this browser.");
+        }
+      }
+
       // Search for restaurants using the Places API
-      function searchRestaurants(map) {
+      function searchRestaurants(location) {
         // Create a PlacesService object
         const service = new google.maps.places.PlacesService(map);
 
         // Define the search request
         const request = {
-          location: map.getCenter(),
+          location: location,
           radius: 5000, // Adjust the search radius as desired
           types: ["restaurant"], // Filter for restaurants only
         };
 
         // Send the search request and process the results
-        service.nearbySearch(request, (results, status) => {
+        service.nearbySearch(request, function(results, status) {
           if (status === google.maps.places.PlacesServiceStatus.OK) {
             // Create markers for each restaurant found
             for (let i = 0; i < results.length; i++) {
@@ -142,36 +170,26 @@
 
       // Create a marker for each place
       function createMarker(place, map) {
-        new google.maps.Marker({
+        const marker = new google.maps.Marker({
           position: place.geometry.location,
-          map,
+          map: map,
           title: place.name,
         });
+
+        // Add marker to the markers array
+        markers.push(marker);
       }
 
       // Clear all markers from the map
       function clearMarkers() {
-        // ...
-      }
-
-      // Find user's location when the button is clicked
-      const findLocationButton = document.getElementById("findLocationButton");
-      findLocationButton.addEventListener("click", () => {
-        if (navigator.geolocation) {
-          navigator.geolocation.getCurrentPosition(function(position) {
-            const userLocation = {
-              lat: position.coords.latitude,
-              lng: position.coords.longitude
-            };
-
-            map.setCenter(userLocation);
-            clearMarkers();
-            searchRestaurants(map);
-          });
-        } else {
-          alert("Geolocation is not supported by this browser.");
+        // Loop through all the markers and set the map to null
+        for (let i = 0; i < markers.length; i++) {
+          markers[i].setMap(null);
         }
-      });
+
+        // Clear the markers array
+        markers = [];
+      }
     }
   </script>
 
