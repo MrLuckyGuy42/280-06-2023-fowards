@@ -22,6 +22,7 @@
       margin: 0 auto;
       padding: 20px;
       text-align: center;
+      display: grid;
     }
 
     /* styling for the heading */
@@ -29,6 +30,16 @@
       font-size: 32px;
       color: #333;
       margin-bottom: 20px;
+    }
+
+      .search-bar {
+        z-index: 1500;
+        position: absolute;
+        top: 20%;
+        background-color: white;
+        border-radius: 3.5px;
+        padding: 4px 4px;
+        justify-self: center;
     }
   </style>
 </head>
@@ -40,9 +51,10 @@
     <!-- Map container -->
     <div id="map"></div>
     <!-- Search box for places autocomplete -->
+    <div class="search-bar">
     <input id="placesSearchInput" type="text" placeholder="Search for a place">
     <!-- Button to find user's location -->
-    <button id="findLocationButton">Find My Location</button>
+    <button id="findLocationButton">Find My Location</button></div>
   </div>
 
   <!-- JavaScript code for map and restaurant search functionality. -->
@@ -191,7 +203,7 @@
         markers = [];
       }
     }
-  </script>
+  </script> 
 
   <!-- Load the Google Maps JavaScript API with the Places library -->
   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBxgFm8A0qnrxYKkvbQHCfF9WWBBS_SyjI&libraries=places&callback=initMap"></script>
