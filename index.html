@@ -32,14 +32,14 @@
       margin-bottom: 20px;
     }
 
-      .search-bar {
-        z-index: 1500;
-        position: absolute;
-        top: 20%;
-        background-color: white;
-        border-radius: 3.5px;
-        padding: 4px 4px;
-        justify-self: center;
+    .search-bar {
+      z-index: 1500;
+      position: absolute;
+      top: 20%;
+      background-color: white;
+      border-radius: 3.5px;
+      padding: 4px 4px;
+      justify-self: center;
     }
   </style>
 </head>
@@ -52,9 +52,10 @@
     <div id="map"></div>
     <!-- Search box for places autocomplete -->
     <div class="search-bar">
-    <input id="placesSearchInput" type="text" placeholder="Search for a place">
-    <!-- Button to find user's location -->
-    <button id="findLocationButton">Find My Location</button></div>
+      <input id="placesSearchInput" type="text" placeholder="Search for a place">
+      <!-- Button to find user's location -->
+      <button id="findLocationButton">Find My Location</button>
+    </div>
   </div>
 
   <!-- JavaScript code for map and restaurant search functionality. -->
@@ -62,6 +63,9 @@
     let map;
     let searchBox;
     let markers = [];
+    let userLocationMarker;
+    let directionsService;
+    let directionsDisplay;
 
     // initialize the map and search for restaurants.
     function initMap() {
@@ -138,72 +142,109 @@
       } else {
         alert("Geolocation is not supported by this browser.");
       }
+    }
 
-      // Get user's location
-      function getUserLocation() {
-        if (navigator.geolocation) {
-          navigator.geolocation.getCurrentPosition(function(position) {
-            const userLocation = {
-              lat: position.coords.latitude,
-              lng: position.coords.longitude
-            };
+    // Get user's location
+    function getUserLocation() {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function(position) {
+          const userLocation = {
+            lat: position.coords.latitude,
+            lng: position.coords.longitude
+          };
 
-            map.setCenter(userLocation);
-            clearMarkers();
-            searchRestaurants(userLocation);
-          });
-        } else {
-          alert("Geolocation is not supported by this browser.");
-        }
-      }
-
-      // Search for restaurants using the Places API
-      function searchRestaurants(location) {
-        // Create a PlacesService object
-        const service = new google.maps.places.PlacesService(map);
-
-        // Define the search request
-        const request = {
-          location: location,
-          radius: 5000, // Adjust the search radius as desired
-          types: ["restaurant"], // Filter for restaurants only
-        };
-
-        // Send the search request and process the results
-        service.nearbySearch(request, function(results, status) {
-          if (status === google.maps.places.PlacesServiceStatus.OK) {
-            // Create markers for each restaurant found
-            for (let i = 0; i < results.length; i++) {
-              createMarker(results[i], map);
-            }
-          }
+          map.setCenter(userLocation);
+          clearMarkers();
+          searchRestaurants(userLocation);
         });
-      }
-
-      // Create a marker for each place
-      function createMarker(place, map) {
-        const marker = new google.maps.Marker({
-          position: place.geometry.location,
-          map: map,
-          title: place.name,
-        });
-
-        // Add marker to the markers array
-        markers.push(marker);
-      }
-
-      // Clear all markers from the map
-      function clearMarkers() {
-        // Loop through all the markers and set the map to null
-        for (let i = 0; i < markers.length; i++) {
-          markers[i].setMap(null);
-        }
-
-        // Clear the markers array
-        markers = [];
+      } else {
+        alert("Geolocation is not supported by this browser.");
       }
     }
-  </script> 
+
+    // Search for restaurants using the Places API
+    function searchRestaurants(location) {
+      // Create a PlacesService object
+      const service = new google.maps.places.PlacesService(map);
+
+      // Define the search request
+      const request = {
+        location: location,
+        radius: 5000, // Adjust the search radius as desired
+        types: ["restaurant"], // Filter for restaurants only
+      };
+
+      // Send the search request and process the results
+      service.nearbySearch(request, function(results, status) {
+        if (status === google.maps.places.PlacesServiceStatus.OK) {
+          // Create markers for each restaurant found
+          for (let i = 0; i < results.length; i++) {
+            createMarker(results[i], map);
+          }
+        }
+      });
+    }
+
+    // Create a marker for each place
+    function createMarker(place, map) {
+      const marker = new google.maps.Marker({
+        position: place.geometry.location,
+        map: map,
+        title: place.name,
+      });
+
+      // Add marker to the markers array
+      markers.push(marker);
+
+      // Add a click event listener to each marker
+      marker.addListener("click", function() {
+        calculateAndDisplayRoute(marker.getPosition());
+      });
+    }
+
+    // Calculate and display the route between user's location and the selected restaurant
+    function calculateAndDisplayRoute(destination) {
+      if (!userLocationMarker) {
+        alert("Unable to determine your current location.");
+        return;
+      }
+
+      const request = {
+        origin: userLocationMarker.getPosition(),
+        destination: destination,
+        travelMode: google.maps.TravelMode.DRIVING
+      };
+
+      directionsService.route(request, function (result, status) {
+        if (status == google.maps.DirectionsStatus.OK) {
+          directionsDisplay.setDirections(result);
+
+          // Display distance and duration information
+          const distance = result.routes[0].legs[0].distance.text;
+          const duration = result.routes[0].legs[0].duration.text;
+
+          const infoWindow = new google.maps.InfoWindow({
+            content: `<strong>Distance:</strong> ${distance}<br><strong>Duration:</strong> ${duration}`
+          });
+
+          infoWindow.open(map, userLocationMarker);
+        } else {
+          alert("Directions request failed due to " + status);
+        }
+      });
+    }
+
+    // Clear all markers from the map
+    function clearMarkers() {
+      // Loop through all the markers and set the map to null
+      for (let i = 0; i < markers.length; i++) {
+        markers[i].setMap(null);
+      }
+
+      // Clear the markers array
+      markers = [];
+    }
+  </script>
 
   <!-- Load the Google Maps JavaScript API with the Places library -->
   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBxgFm8A0qnrxYKkvbQHCfF9WWBBS_SyjI&libraries=places&callback=initMap"></script>
