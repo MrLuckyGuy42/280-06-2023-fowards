@@ -17,13 +17,13 @@
       }
 
       .search-bar {
-        top: 10%;
+        top: 70px; /* Adjust this value as needed */
       }
     }
 
     /* setting the height of the map container */
     #map {
-      height: 100vh;
+      height: calc(100vh - 40px);
     }
 
     /* Center the content and provide padding */
@@ -32,7 +32,6 @@
       margin: 0 auto;
       padding: 20px;
       text-align: center;
-      display: grid;
     }
 
     /* styling for the heading */
@@ -43,14 +42,36 @@
     }
 
       .search-bar {
-        z-index: 1500;
+        z-index: 1000;
         position: absolute;
-        top: 20%;
+        top: 20%; /* Adjust this value as needed */
+        left: 50%;
+        transform: translateX(-50%);
         background-color: white;
         border-radius: 3.5px;
         padding: 4px 4px;
-        justify-self: center;
-    }
+        display: grid;
+        gap: 10px;
+        opacity: 0.92;
+        transition: opactiy 0.3s;
+      }
+
+      .filter-button {
+        cursor: pointer;
+        color: blue;
+        text-decoration: underline;
+      }
+
+      .filter-container   {
+        display: none;
+      }
+      
+      .filter-container.show {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 10px;
+      }
+
   </style>
 </head>
 <body>
@@ -70,6 +91,8 @@
         <option value="all">All Cuisines</option>
         <option value="italian">Italian</option>
         <option value="mexican">Mexican</option>
+        <option value="american">American</option>
+        <option value="indian">Indian</option>
         <!-- Add more cuisine options as needed -->
       </select>
     </div>
@@ -79,11 +102,7 @@
     </div>
     <div>
       <label for="ratingRange">Minimum Rating:</label>
-      <input type="range" id="ratingRange" min="0" max="5" step="0.1" value="0" />
-    </div>
-    <div>
-      <label for="priceRange">Price Range:</label>
-      <input type="range" id="priceRange" min="1" max="4" value="1" />
+      <input type="range" id="ratingRange" min="1" max="5" step="1" value="0" />
     </div>
     <!-- Button to find user's location -->
     <button id="findLocationButton">Find My Location</button></div>
@@ -94,6 +113,13 @@
     let map;
     let searchBox;
     let markers = [];
+    let filterContainerVisible = false;
+
+    function toggleFilters() {
+      const filterContainer = document.getElementById('filterContainer');
+    filterContainerVisible = !filterContainerVisible;
+    filterContainer.classList.toggle("show", filterContainerVisible);
+    }
 
     // initialize the map and search for restaurants.
     function initMap() {
