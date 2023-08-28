@@ -91,6 +91,7 @@ h3 {
   width: 40rem;
   height: 30rem;
   box-shadow: 0px 0px 3px black;
+  border-radius: 7px;
 }
 
 
@@ -110,4 +111,64 @@ h3 {
 a {
   text-decoration: none;
   color: black;
+}
+
+
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+header {
+  background-color: #333;
+  color: white;
+  text-align: center;
+  padding: 1rem;
+}
+
+main {
+  padding: 2rem;
+}
+
+.forum-posts {
+  border: 1px solid #ddd;
+  padding: 1rem;
+}
+
+.post {
+  border: 1px solid #ddd;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+.post-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.post-date, .comment-date {
+  font-size: 0.8rem;
+  color: #777;
+}
+
+.comment-button {
+  background-color: #333;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+}
+
+.comment {
+  border: 1px solid #eee;
+  padding: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+
+.Feedback-text {
+  font-family: serif;
 }
