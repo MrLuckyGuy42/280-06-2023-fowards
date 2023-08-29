@@ -165,10 +165,29 @@ main {
 .comment {
   border: 1px solid #eee;
   padding: 0.5rem;
-  margin-top: 0.5rem;
+  margin-top: 0.2srem;
 }
 
 
 .Feedback-text {
   font-family: serif;
+  font-weight: 700;
+  font-size: 110%;
+  margin-top: 0.1%;
+  margin-bottom: 0.1%;
+}
+
+body {
+  animation: fadeInAnimation ease 1s;
+  animation-iteration-count: 1;
+  animation-fill-mode: forwards;
+}
+
+@keyframes fadeInAnimation {
+  0% {
+      opacity: 0;
+  }
+  100% {
+      opacity: 1;
+   }
 }
