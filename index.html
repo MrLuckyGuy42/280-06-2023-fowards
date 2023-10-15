@@ -27,6 +27,9 @@
             <option value="all">All Cuisines</option>
             <option value="italian">Italian</option>
             <option value="mexican">Mexican</option>
+            <option value="indian">Indian</option>
+            <option value="Japanese">Japanese</option>
+            <option value="Chinese">Chinese</option>
             <!-- Add more cuisine options as needed -->
           </select>
         </div>
@@ -36,12 +39,19 @@
         </div>
         <div>
           <label for="ratingRange">Minimum Rating:</label>
-          <input type="range" id="ratingRange" min="1" max="5" step="1" value="0" />
+          <input type="number" id="ratingRange" min="1" max="5" step="1" value="0" />
         </div>
-        <div>
+        <div class="priceRange2">
           <label for="priceRange">Price Range:</label>
-          <input type="range" id="priceRange" min="1" max="4" value="1" />
+          <div>
+            <button id="btn1to10">1-10</button>
+            <button id="btn10to20">10-20</button>
+            <button id="btn30plus">30+</button>
+            <button id="btnNone">None</button>
+          </div>
+          <input type="hidden" id="priceRange" name="priceRange" value="1">
         </div>
+        
         <!-- Button to find user's location -->
         <button id="findLocationButton">Find My Location</button>
       </div>
@@ -173,6 +183,25 @@
           radius: 5000, // Adjust the search radius as desired
           types: ["restaurant"], // Filter for restaurants only
         };
+        
+        const cuisineTypeFilter = document.getElementById("cuisineType");
+        cuisineTypeFilter.addEventListener("change", Updatefilters);
+
+
+
+        function Updatefilters() {
+          setTimeout(() => {
+            if (navigator.geolocation) {
+              navigator.geolocation.getCurrentPosition(function (position) {
+                const userLocation = {
+                  lat: position.coords.latitude,
+                  lng : position.coords.longitude,
+                };
+              }
+            }
+          }
+          )
+        }
 
         // Add filters to the search request based on the selected values
         if (cuisineType !== "all") {
@@ -258,8 +287,29 @@
         document.body.appendChild(script);
       }
 
+      // Allow price range to chagne according to buttoms
+      const PricerangeInput = document.getElementById("priceRange");
+
+      document.getElementById(btn1to10).addEventListener("click", function () {
+        PricerangeInput.value = "1-10" ;
+      });
+
+      document.getElementById(btn10to20).addEventListener("click", function () {
+        PricerangeInput.value = "10-20" ;
+      });
+
+      document.getElementById(btn1to30plus).addEventListener("click", function () {
+        PricerangeInput.value = "30+" ;
+      });
+
+      document.getElementById(btnNone).addEventListener("click", function () {
+        PricerangeInput.value = "none" ;
+      });
+      
       // Call the function to load the Google Maps API script when the page loads
       window.onload = loadGoogleMapsScript;
+      
+
     </script>
   </body>
   </html>
