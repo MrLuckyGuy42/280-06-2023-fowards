@@ -13,6 +13,7 @@ body {
 
   .search-bar {
     top: 10%;
+    ;
   }
 }
 
@@ -253,8 +254,8 @@ body {
  
 }
 
-.priceRange2 {
-  padding-bottom: 0.5rem;
+.priceRange {
+  margin-bottom: 0.5rem;
 }
 
 .slider-labels {
@@ -266,5 +267,12 @@ body {
 
 .slider-labels span {
   flex: 1;
-  text-align: center;
+  text-align: right;
+  display: flex;
+  padding-left: 8rem;
+  padding-right: 0.5rem;
+}
+
+.cuisineType {
+  margin-top: 0.5rem;
 }
