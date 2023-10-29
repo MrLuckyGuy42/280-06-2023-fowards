@@ -2,14 +2,14 @@
 <html class="animate.contents">
 <head class="body">
   <title>Restaurant Finder</title>
-<link rel="stylesheet" href="style.css" type="text/css">
+  <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body>
-  
+
   <div class="transition transition-1 is-active"></div>
   <!-- Heading for the website -->
   <div class="header">
-    <p> <a href="index.html"><img src="house-icon-png-white-32.png" alt="Home"></h1></a></p>
+    <p> <a href="index.html"><img src="house-icon-png-white-32.png" alt="Home"></a></p>
     <h1>Restaurant Finder</h1>
     <h3 class="support-header"><a href="Timeline.html">Timeline</a></h3>
   </div>
@@ -23,7 +23,7 @@
       <!-- Search filters -->
       <div>
         <label for="cuisineType">Cuisine Type:</label>
-        <select id="cuisineType"> 
+        <select id="cuisineType">
           <option value="all">All Cuisines</option>
           <option value="italian">Italian</option>
           <option value="mexican">Mexican</option>
@@ -37,12 +37,21 @@
       <div>
         <label for="ratingRange">Minimum Rating:</label>
         <input type="range" id="ratingRange" min="1" max="5" step="1" value="0" />
+        <div class="slider-labels">
+          <span>1</span>
+          <span>5</span>
+        </div>
       </div>
       <div>
         <label for="priceRange">Price Range:</label>
-        <input type="range" id="priceRange" min="1" max="4" value="1" />
+        <select id="priceRange">
+          <option value="none">None</option>
+          <option value="low">Low</option>
+          <option value="medium">Medium</option>
+          <option value="high">High</option>
+        </select>
       </div>
-      <!-- Button to find user's location -->
+      <!-- Button to find the user's location -->
       <button id="findLocationButton">Find My Location</button>
     </div>
   </div>
@@ -50,7 +59,6 @@
     <H3 class="Decorationless"><a href="Timeline.html">Timeline</a></H1>
     <h3>Phone: 027 000 0000</h3>
     <h3 class="Decorationless"><a href="Feedback.html">Feedback</a></h3>
-
   </div>
 
   <!-- JavaScript code for map and restaurant search functionality. -->
@@ -59,9 +67,7 @@
     let searchBox;
     let markers = [];
 
-    fetch['rhrrhrh']
-
-    // initialize the map and search for restaurants.
+    // Initialize the map and search for restaurants.
     function initMap() {
       // check if geolocation is supported by the browser.
       if (navigator.geolocation) {
@@ -117,17 +123,39 @@
               }
             });
 
-            // Set the map's center and zoom to fit all markers and selected place
+            // Set the map's center and zoom to fit all markers and the selected place
             map.fitBounds(bounds);
 
             // Search for nearby restaurants at the selected location
             searchRestaurants(bounds.getCenter());
           });
 
-          // Find user's location and search for nearby restaurants when the button is clicked
+          // Find the user's location and search for nearby restaurants when the button is clicked
           const findLocationButton = document.getElementById("findLocationButton");
           findLocationButton.addEventListener("click", function() {
             getUserLocation();
+          });
+
+          // Add event listeners to the filters for real-time updating
+          const cuisineType = document.getElementById("cuisineType");
+          const openNow = document.getElementById("openNow");
+          const ratingRange = document.getElementById("ratingRange");
+          const priceRange = document.getElementById("priceRange");
+
+          cuisineType.addEventListener("change", function() {
+            searchRestaurants(map.getCenter());
+          });
+
+          openNow.addEventListener("change", function() {
+            searchRestaurants(map.getCenter());
+          });
+
+          ratingRange.addEventListener("input", function() {
+            searchRestaurants(map.getCenter());
+          });
+
+          priceRange.addEventListener("change", function() {
+            searchRestaurants(map.getCenter());
           });
 
           // Search for nearby restaurants on the map
@@ -138,7 +166,7 @@
       }
     }
 
-    // Get user's location using browser-based geolocation
+    // Get the user's location using browser-based geolocation
     function getUserLocation() {
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(function(position) {
@@ -162,7 +190,7 @@
       const cuisineType = document.getElementById("cuisineType").value;
       const openNow = document.getElementById("openNow").checked;
       const minRating = parseFloat(document.getElementById("ratingRange").value);
-      const maxPriceLevel = parseInt(document.getElementById("priceRange").value);
+      const priceRange = document.getElementById("priceRange").value;
 
       // Create a PlacesService object
       const service = new google.maps.places.PlacesService(map);
@@ -188,7 +216,8 @@
           // Filter the results based on rating and price range
           const filteredResults = results.filter(
             (place) =>
-              place.rating >= minRating && (!place.price_level || place.price_level <= maxPriceLevel)
+              place.rating >= minRating &&
+              (priceRange === "none" || (place.price_level && place.price_level <= getPriceLevel(priceRange)))
           );
 
           // Create markers for each restaurant found
@@ -218,7 +247,7 @@
       });
     }
 
-    // Function to show distance and route between user's location and a restaurant
+    // Function to show distance and route between the user's location and a restaurant
     function showDistanceAndRoute(destination) {
       // Get the user's current location
       if (navigator.geolocation) {
@@ -230,7 +259,7 @@
           // Show the distance
           window.alert(`Distance to ${place.name}: ${distanceInKm} km`);
 
-          // Show route on the map
+          // Show the route on the map
           showRoute(destination);
         });
       } else {
@@ -247,6 +276,22 @@
 
       // Clear the markers array
       markers = [];
+    }
+
+    // Convert price range option to a numerical value
+    function getPriceLevel(priceRange) {
+      switch (priceRange) {
+        case "none":
+          return 0;
+        case "low":
+          return 1;
+        case "medium":
+          return 2;
+        case "high":
+          return 3;
+        default:
+          return 0;
+      }
     }
 
     // Load the Google Maps JavaScript API with the Places library
