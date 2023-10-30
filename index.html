@@ -32,7 +32,7 @@
       </div>
       <div>
         <input type="checkbox" id="openNow" />
-        <label for "openNow">Open Now</label>
+        <label for="openNow">Open Now</label>
       </div>
       <div>
         <label for="ratingRange">Minimum Rating:</label>
@@ -166,7 +166,7 @@
 
           // Search for nearby restaurants on the map
           searchRestaurants(userLocation);
-        });
+        }, handleGeolocationError); // Handle geolocation error
       } else {
         alert("Geolocation is not supported by this browser.");
       }
@@ -184,10 +184,15 @@
           map.setCenter(userLocation);
           clearMarkers();
           searchRestaurants(userLocation);
-        });
+        }, handleGeolocationError); // Handle geolocation error
       } else {
         alert("Geolocation is not supported by this browser.");
       }
+    }
+
+    // Handle geolocation error
+    function handleGeolocationError(error) {
+      alert("Error getting user location: " + error.message);
     }
 
     // Modify the searchRestaurants function to include search filters
@@ -231,6 +236,8 @@
           for (let i = 0; i < filteredResults.length; i++) {
             createMarker(filteredResults[i], map);
           }
+        } else {
+          alert("Error fetching restaurant data: " + status);
         }
       });
     }
