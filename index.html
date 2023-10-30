@@ -43,7 +43,7 @@
         </div>
       </div>
       <div>
-        <label  for="priceRange">Price Range:</label>
+        <label for="priceRange">Price Range:</label>
         <select class="priceRange" id="priceRange">
           <option value="none">None</option>
           <option value="low">$10</option>
@@ -56,8 +56,8 @@
     </div>
   </div>
   <div class="Botttom-header">
-    <H3 class="Decorationless"><a href="Timeline.html">Timeline</a></H1>
-    <h3>Phone: 027 000 0000</h3>
+    <h3 class="Decorationless"><a href="Timeline.html">Timeline</a></h3>
+    <h3 id="phone">Phone: N/A</h3>
     <h3 class="Decorationless"><a href="Feedback.html">Feedback</a></h3>
   </div>
 
@@ -66,6 +66,7 @@
     let map;
     let searchBox;
     let markers = [];
+    let activeInfoWindow = null;
 
     // Initialize the map and search for restaurants.
     function initMap() {
@@ -100,6 +101,11 @@
 
             if (places.length === 0) {
               return;
+            }
+
+            // Close the active info window, if one exists
+            if (activeInfoWindow) {
+              activeInfoWindow.close();
             }
 
             // Clear previous markers
@@ -240,11 +246,63 @@
       // Add marker to the markers array
       markers.push(marker);
 
-      // Attach a click event to the marker to show distance and route
-      marker.addListener("click", function() {
-        const destination = place.geometry.location;
-        showDistanceAndRoute(destination);
-      });
+      // Create an info window with restaurant details
+      const infoWindow = new google.maps.InfoWindow();
+
+      // Fetch additional details using Place Details service
+      const service = new google.maps.places.PlacesService(map);
+      service.getDetails(
+        {
+          placeId: place.place_id,
+        },
+        function (result, status) {
+          if (status === google.maps.places.PlacesServiceStatus.OK) {
+            // Format opening hours as a string
+            let openingHoursText = "N/A";
+            if (result.opening_hours) {
+              openingHoursText = result.opening_hours.weekday_text.join('<br>');
+            }
+
+            const content = `
+              <strong>${result.name}</strong><br>
+              Address: ${result.vicinity || "N/A"}<br>
+              Opening Hours:<br>${openingHoursText}<br>
+              Rating: ${result.rating || "N/A"}<br>
+              Phone: ${result.formatted_phone_number || "N/A"}
+            `;
+
+            infoWindow.setContent(content);
+          } else {
+            // Format opening hours as a string
+            let openingHoursText = "N/A";
+            if (place.opening_hours) {
+              openingHoursText = place.opening_hours.weekday_text.join('<br>');
+            }
+
+            const content = `
+              <strong>${place.name}</strong><br>
+              Address: ${place.vicinity || "N/A"}<br>
+              Opening Hours:<br>${openingHoursText}<br>
+              Rating: ${place.rating || "N/A"}<br>
+              Phone: ${place.formatted_phone_number || "N/A"}
+            `;
+
+            infoWindow.setContent(content);
+          }
+
+          // Attach a click event to the marker to show the info window
+          marker.addListener("click", function () {
+            if (activeInfoWindow) {
+              activeInfoWindow.close();
+            }
+
+            infoWindow.open(map, marker);
+            activeInfoWindow = infoWindow;
+
+            showDistanceAndRoute(place.geometry.location);
+          });
+        }
+      );
     }
 
     // Function to show distance and route between the user's location and a restaurant
