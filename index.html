@@ -32,7 +32,7 @@
       </div>
       <div>
         <input type="checkbox" id="openNow" />
-        <label for="openNow">Open Now</label>
+        <label for "openNow">Open Now</label>
       </div>
       <div>
         <label for="ratingRange">Minimum Rating:</label>
@@ -70,7 +70,7 @@
 
     // Initialize the map and search for restaurants.
     function initMap() {
-      // check if geolocation is supported by the browser.
+      // Check if geolocation is supported by the browser.
       if (navigator.geolocation) {
         // Get the user's current position
         navigator.geolocation.getCurrentPosition(function(position) {
@@ -298,31 +298,9 @@
 
             infoWindow.open(map, marker);
             activeInfoWindow = infoWindow;
-
-            showDistanceAndRoute(place.geometry.location);
           });
         }
       );
-    }
-
-    // Function to show distance and route between the user's location and a restaurant
-    function showDistanceAndRoute(destination) {
-      // Get the user's current location
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(function(position) {
-          const userLocation = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-          const distance = google.maps.geometry.spherical.computeDistanceBetween(userLocation, destination);
-          const distanceInKm = (distance / 1000).toFixed(2); // Convert distance to kilometers and round to 2 decimal places
-
-          // Show the distance
-          window.alert(`Distance to ${place.name}: ${distanceInKm} km`);
-
-          // Show the route on the map
-          showRoute(destination);
-        });
-      } else {
-        alert("Geolocation is not supported by this browser.");
-      }
     }
 
     // Function to clear all markers from the map
