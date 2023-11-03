@@ -131,45 +131,8 @@ header {
 
 main {
   padding: 2rem;
-}
 
-.forum-posts {
-  border: 1px solid #ddd;
-  padding: 1rem;
 }
-
-.post {
-  border: 1px solid #ddd;
-  padding: 1rem;
-  margin-bottom: 1rem;
-}
-
-.post-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 0.5rem;
-}
-
-.post-date, .comment-date {
-  font-size: 0.8rem;
-  color: #777;
-}
-
-.comment-button {
-  background-color: #333;
-  color: white;
-  border: none;
-  padding: 0.5rem 1rem;
-  cursor: pointer;
-}
-
-.comment {
-  border: 1px solid #eee;
-  padding: 0.5rem;
-  margin-top: 0.2srem;
-}
-
 
 .Feedback-text {
   font-family: serif;
