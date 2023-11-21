@@ -1,4 +1,4 @@
-/* setting the styling for the page */
+/* Global styling for the page */
 body {
   margin: 0;
   padding: 0;
@@ -6,17 +6,20 @@ body {
   background-color: #dddddd;
 }
 
-@media (max-width: 600px) { /* Update the container width and search bar position for mobile devices */
+/* Media query for mobile devices */
+@media (max-width: 600px) {
   .container {
     padding: 10px;
   }
 
+  /* Adjusts search bar position */
   .search-bar {
     top: 10%;
-    ;
+   
   }
 }
 
+/* Header styling */
 .header {
   height: 100pt;
   text-align: center;
@@ -26,7 +29,7 @@ body {
   width: 100%;
   display: flex;
   align-items: space-evenly;
-  align-items: center;
+  align-items: center; 
   justify-content: space-around;
 }
 
@@ -35,13 +38,13 @@ body {
   height: 4rem;
 }
 
-/* setting the height of the map container */
+/* Map container styling */
 #map {
   height: 100vh;
   box-shadow: 0px 0px 5px black;
 }
 
-/* Center the content and provide padding */
+/* Main container styling */
 .container {
   max-width: 800px;
   margin: 0 auto;
@@ -50,7 +53,7 @@ body {
   display: grid;
 }
 
-/* styling for the heading */
+/* Heading styles */
 h1 {
   font-size: 32px;
   color: #333;
@@ -65,6 +68,7 @@ h3 {
   text-align: right;
 }
 
+/* Search bar styling */
 .search-bar {
   z-index: 1000;
   position: absolute;
@@ -76,18 +80,18 @@ h3 {
   box-shadow: 0px 2px 3px black;
 }
 
+/* Support section styling */
 .Support {
-    text-align: center;
-    font-family:serif;
+  text-align: center;
+  font-family: serif;
 }
 
-.Support-header { a{
+.Support-header a {
   text-decoration: none;
-  color: black;}
+  color: black;
 }
 
-
-
+/* Photos section styling */
 .Photos img {
   width: 40rem;
   height: 30rem;
@@ -95,7 +99,7 @@ h3 {
   border-radius: 7px;
 }
 
-
+/* Bottom header styling */
 .Botttom-header {
   height: 100pt;
   text-align: center;
@@ -105,7 +109,7 @@ h3 {
   width: 100%;
   display: flex;
   align-items: space-evenly;
-  align-items: center;
+  align-items: center; /* Duplicate property, remove one */
   justify-content: space-around;
   bottom: 0%;
 }
@@ -115,33 +119,7 @@ a {
   color: black;
 }
 
-
-body {
-  font-family: Arial, sans-serif;
-  margin: 0;
-  padding: 0;
-}
-
-header {
-  background-color: #333;
-  color: white;
-  text-align: center;
-  padding: 1rem;
-}
-
-main {
-  padding: 2rem;
-
-}
-
-.Feedback-text {
-  font-family: serif;
-  font-weight: 700;
-  font-size: 110%;
-  margin-top: 0.1%;
-  margin-bottom: 0.1%;
-}
-
+/* Animation */
 body {
   animation: fadeInAnimation ease 1s;
   animation-iteration-count: 1;
@@ -150,13 +128,14 @@ body {
 
 @keyframes fadeInAnimation {
   0% {
-      opacity: 0;
+    opacity: 0;
   }
   100% {
-      opacity: 1;
-   }
+    opacity: 1;
+  }
 }
 
+/* Search bar 2 styles */
 .search-bar2 {
   background-color: #dddddd;
   box-shadow: 0px 0px 0px black;
@@ -166,6 +145,7 @@ body {
   justify-content: center;
   align-items: center;
 }
+
 .search-bar2 input[type="text"] {
   width: 80%;
   padding: 8px;
@@ -182,6 +162,7 @@ body {
   cursor: pointer;
 }
 
+/* Search filters styles */
 .search-filters {
   background-color: #dddddd;
   box-shadow: 0px 0px 0px black;
@@ -202,25 +183,28 @@ body {
   color: white;
   border-radius: 4px;
   cursor: pointer;
-  
 }
 
+/* Post styles */
 .post {
   margin-left: 2%;
   margin-right: 2%;
 }
+
+/* Google forum styling */
 .Googleforum {
- margin-right: 25%;
- margin-left: 25%;
- padding-top: 5rem;
- padding-bottom: 5rem ;
- 
+  margin-right: 25%;
+  margin-left: 25%;
+  padding-top: 5rem;
+  padding-bottom: 5rem;
 }
 
+/* Price range styles */
 .priceRange {
   margin-bottom: 0.5rem;
 }
 
+/* Slider labels styles */
 .slider-labels {
   display: flex;
   justify-content: space-between;
@@ -236,6 +220,7 @@ body {
   padding-right: 0.5rem;
 }
 
+/* Cuisine type styles */
 .cuisineType {
   margin-top: 0.5rem;
 }
